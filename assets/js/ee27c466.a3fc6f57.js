@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[533],{6590:s=>{s.exports=JSON.parse('{"label":"Okda Networks","permalink":"/blog/tags/okda-networks","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);

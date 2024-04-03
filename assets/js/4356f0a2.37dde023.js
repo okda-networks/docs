@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[270],{6104:a=>{a.exports=JSON.parse('{"label":"YANG","permalink":"/blog/tags/yang","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);

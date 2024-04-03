@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[2908],{6193:e=>{e.exports=JSON.parse('{"title":"ONM-CLI","slug":"/category/onm-cli","permalink":"/category/onm-cli","navigation":{"previous":{"title":"Supported Features","permalink":"/IPRoute2-Sysrepo/supported-features"},"next":{"title":"Overview","permalink":"/ONM-CLI/overview"}}}')}}]);
