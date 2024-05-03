@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[942],{9072:e=>{e.exports=JSON.parse('{"label":"Open Networking","permalink":"/blog/tags/open-networking","allTagsPath":"/blog/tags","count":1,"unlisted":false}')}}]);

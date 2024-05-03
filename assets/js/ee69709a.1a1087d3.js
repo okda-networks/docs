@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[590],{9597:e=>{e.exports=JSON.parse('{"title":"Okda Network Manager","slug":"/category/okda-network-manager","permalink":"/category/okda-network-manager","navigation":{"next":{"title":"Overview","permalink":"/"}}}')}}]);
