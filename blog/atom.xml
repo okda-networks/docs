@@ -6,7 +6,7 @@
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://okdanetworks.com/blog"/>
     <subtitle>Okda Networks Blog</subtitle>
-    <icon>https://okdanetworks.com/img/favicon.svg</icon>
+    <icon>https://okdanetworks.com/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Test Blog Post]]></title>
         <id>https://okdanetworks.com/blog/first-blog-post</id>
