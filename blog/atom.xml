@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://okdanetworks.com/blog</id>
+    <id>https://docs.okdanetworks.com/blog</id>
     <title>Okda Networks Blog</title>
     <updated>2024-04-04T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://okdanetworks.com/blog"/>
+    <link rel="alternate" href="https://docs.okdanetworks.com/blog"/>
     <subtitle>Okda Networks Blog</subtitle>
-    <icon>https://okdanetworks.com/img/favicon2.jpg</icon>
+    <icon>https://docs.okdanetworks.com/img/favicon2.jpg</icon>
     <entry>
         <title type="html"><![CDATA[Test Blog Post]]></title>
-        <id>https://okdanetworks.com/blog/first-blog-post</id>
-        <link href="https://okdanetworks.com/blog/first-blog-post"/>
+        <id>https://docs.okdanetworks.com/blog/first-blog-post</id>
+        <link href="https://docs.okdanetworks.com/blog/first-blog-post"/>
         <updated>2024-04-04T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Test blog post body]]></summary>
         <content type="html"><![CDATA[<p>Test blog post body</p>]]></content>
