@@ -4,18 +4,82 @@
         <title>Okda Networks Blog</title>
         <link>https://docs.okdanetworks.com/blog</link>
         <description>Okda Networks Blog</description>
-        <lastBuildDate>Thu, 04 Apr 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 21 Jul 2024 19:56:52 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
         <item>
-            <title><![CDATA[Test Blog Post]]></title>
+            <title><![CDATA[Step-by-Step Guide For Linux L3VPN Using GRE/MPLS[WIP]]]></title>
             <link>https://docs.okdanetworks.com/blog/first-blog-post</link>
             <guid>https://docs.okdanetworks.com/blog/first-blog-post</guid>
-            <pubDate>Thu, 04 Apr 2024 00:00:00 GMT</pubDate>
-            <description><![CDATA[Test blog post body]]></description>
-            <content:encoded><![CDATA[<p>Test blog post body</p>]]></content:encoded>
-            <category>Okda Networks</category>
+            <pubDate>Sun, 21 Jul 2024 19:56:52 GMT</pubDate>
+            <description><![CDATA[Introduction]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="introduction">Introduction<a class="hash-link" aria-label="Direct link to Introduction" title="Direct link to Introduction" href="https://docs.okdanetworks.com/blog/first-blog-post#introduction">​</a></h2>
+<p>A Layer 3 Virtual Private Network (L3VPN) allows multiple sites
+to communicate over a shared IP network as if they were directly connected.
+In this blog we will go through the configuration of L3VPN  on Linux by using:</p>
+<ul>
+<li><strong>Network Namespace (NETNS)</strong> to create isolated VPNs on the linux router.</li>
+<li><strong>Multiprotocol Label Switching (MPLS)</strong> to label traffic
+with the respective VPN identifiers.</li>
+<li><strong>Generic Routing Encapsulation (GRE)</strong> to create virtual point-to-point tunnels between sites.</li>
+</ul>
+<p>By combining MPLS and GRE, you can establish a robust L3VPN.
+MPLS labels the traffic to ensure it is routed to the correct VPN,
+while GRE tunnels encapsulate the VPN traffic,
+allowing it to traverse the underlying IP network securely.
+This approach leverages the scalability of MPLS and the flexibility
+of GRE to create an effective L3VPN solution.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="use-case-overview">Use Case Overview<a class="hash-link" aria-label="Direct link to Use Case Overview" title="Direct link to Use Case Overview" href="https://docs.okdanetworks.com/blog/first-blog-post#use-case-overview">​</a></h2>
+<p>In this use case, we aim to connect two geographically dispersed sites,
+each with multiple VPNs, over a shared IP network using Linux L3VPN with GRE and MPLS.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="scenario">Scenario<a class="hash-link" aria-label="Direct link to Scenario" title="Direct link to Scenario" href="https://docs.okdanetworks.com/blog/first-blog-post#scenario">​</a></h3>
+<ul>
+<li><strong>Sites</strong>: Two sites, edge router <code>DENT-1</code> and <code>DENT-2</code>, each with two VPNs.</li>
+<li><strong>VPNs</strong>: <code>VPN1</code> and <code>VPN2</code> on both <code>DENT-1</code> and <code>DENT-2</code>.</li>
+<li><strong>Network</strong>: An IP network connects <code>DENT-1</code> and <code>DENT-2</code>.</li>
+<li><strong>Hosts</strong>: Each site has two hosts each host in different VPN,
+<code>PC1</code> and <code>PC3</code> in <code>VPN1</code>, <code>PC2</code> and <code>PC4</code> in <code>VPN2</code>.</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="topology">Topology<a class="hash-link" aria-label="Direct link to Topology" title="Direct link to Topology" href="https://docs.okdanetworks.com/blog/first-blog-post#topology">​</a></h3>
+<p><img decoding="async" loading="lazy" alt="topology1" src="https://docs.okdanetworks.com/assets/images/topology_vpn_gre_mpls-ca4983608c249055fbc4cfad9316703b.png" width="1165" height="571" class="img_ev3q"></p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="requirements">Requirements<a class="hash-link" aria-label="Direct link to Requirements" title="Direct link to Requirements" href="https://docs.okdanetworks.com/blog/first-blog-post#requirements">​</a></h2>
+<p>Make sure you have the following Linux modules installed:</p>
+<div class="language-angular2html codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-angular2html codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token plain">root@dent-1:~# lsmod</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">Module                  Size  Used by</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">ip_gre                 32768  0</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">gre                    16384  1 ip_gre</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mpls_iptunnel          16384  1</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mpls_router            40960  1 mpls_iptunnel</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">mpls_gso               16384  0</span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">vrf                    36864  0</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="configuration-steps">Configuration Steps<a class="hash-link" aria-label="Direct link to Configuration Steps" title="Direct link to Configuration Steps" href="https://docs.okdanetworks.com/blog/first-blog-post#configuration-steps">​</a></h2>
+<p><code>DENT-1</code> configuration:</p>
+<ul>
+<li>Create two <code>netns</code>, <code>VPN1</code> and <code>VPN2</code>.</li>
+<li>To allow routing from <code>VPN1</code> and <code>VPN2</code> to global netns we need to create two VETHs,
+<code>veth1</code> with virtual_peer <code>veth1_vpn1</code> for <code>VPN1-&gt;global</code> traffic flow,
+and  <code>veth2</code> with virtual_peer <code>veth2_vpn2</code> for <code>VPN2-&gt;global</code> traffic flow.</li>
+<li>Add route for prefix <code>192.168.2.0/24</code> in <code>VPN1</code> to global netns using nexthop <code>veth1_vpn1</code> with via address of <code>veth1</code>.</li>
+<li>Add route for prefix <code>192.168.2.0/24</code> in <code>VPN2</code> to global netns using nexthop <code>veth2_vpn2</code> with via address of <code>veth2</code>.</li>
+<li>Create two VRFs, <code>VRF1</code> with table <code>10011</code>, and <code>VRF2</code> with table <code>10012</code>. Each VRF table will have the respective routes
+for each VPN.</li>
+<li>Add ip rule for iif <code>veth1</code> to table <code>10011</code>, to lookup the <code>VRF1</code> table for any traffic coming from <code>VPN1</code> to global VRF.</li>
+<li>Add ip rule for iif <code>veth2</code> to table <code>10012</code>, to lookup the <code>VRF2</code> table for any traffic coming from <code>VPN2</code> to global VRF.</li>
+<li>Create GRE interface <code>GRE1</code> with source <code>1.1.1.1</code> and destination <code>1.1.1.2</code>.</li>
+<li>Add the route toward <code>192.168.2.0/24</code> in both VRFs tables to encapsulate the traffic with the mpls labels and to send the traffic inside the GRE tunnel,<!-- -->
+<ul>
+<li><code>VPN1</code> will encapsulate the traffic from <code>DENt-1</code> to <code>DENT-2</code> with label <code>10021</code>.</li>
+<li><code>VPN2</code> will encapsulate the traffic from <code>DENt-1</code> to <code>DENT-2</code> with label <code>10022</code>.</li>
+</ul>
+</li>
+<li>For return traffic we will add mpls route in the global netns to pop the label and send the traffic
+to the right netns according to the incoming label(via veths address).</li>
+</ul>
+<p><code>DENT-2</code> Configuration will be the same, but with reversed labeling.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="example-configuration">Example Configuration<a class="hash-link" aria-label="Direct link to Example Configuration" title="Direct link to Example Configuration" href="https://docs.okdanetworks.com/blog/first-blog-post#example-configuration">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="verify">Verify<a class="hash-link" aria-label="Direct link to Verify" title="Direct link to Verify" href="https://docs.okdanetworks.com/blog/first-blog-post#verify">​</a></h2>
+<p><img decoding="async" loading="lazy" alt="capture" src="https://docs.okdanetworks.com/assets/images/capture-ecc52cbacb30dc738e235abca5f0d026.png" width="1225" height="223" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="request" src="https://docs.okdanetworks.com/assets/images/capture_req_detail-98fc3901ce5acf7187568a294daf7df2.png" width="844" height="224" class="img_ev3q"></p>
+<p><img decoding="async" loading="lazy" alt="response" src="https://docs.okdanetworks.com/assets/images/capture_resp_detail-0c4fd1031de5f29d9be62914f7095d5e.png" width="844" height="224" class="img_ev3q"></p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="conclusion">Conclusion<a class="hash-link" aria-label="Direct link to Conclusion" title="Direct link to Conclusion" href="https://docs.okdanetworks.com/blog/first-blog-post#conclusion">​</a></h2>]]></content:encoded>
+            <category>Linux</category>
+            <category>VPN</category>
+            <category>GRE</category>
+            <category>MPLS</category>
             <category>YANG</category>
             <category>Open Networking</category>
         </item>
