@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkokda_networks=self.webpackChunkokda_networks||[]).push([[7472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Step-by-Step Guide For Linux L3VPN Using GRE/MPLS","permalink":"/blog/first-blog-post","unlisted":false}]}')}}]);
